@@ -1,4 +1,4 @@
-# usecase_assurly
+# Flutter | Express | MongoDB user registration and back-office
 
 A new Flutter project.
 
