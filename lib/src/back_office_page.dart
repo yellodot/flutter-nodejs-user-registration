@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:usecase_assurly/user_model.dart';
+import 'package:usecase_assurly/models/user_model.dart';
 import 'package:usecase_assurly/api_service.dart';
 
 // class UserTable extends StatelessWidget {
@@ -102,7 +102,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('REST API Example'),
+        title: const Text('Back-office'),
       ),
       body: _userModel == null || _userModel!.isEmpty
           ? const Center(
@@ -126,13 +126,6 @@ class _HomeState extends State<Home> {
                       const SizedBox(
                         height: 20.0,
                       ),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //   children: [
-                      //     Text(_userModel![index].birthdate.toString()),
-                      //     Text(_userModel![index].createdAt.toString()),
-                      //   ],
-                      // ),
                     ],
                   ),
                 );

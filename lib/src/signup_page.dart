@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:usecase_assurly/api_service.dart';
+import 'package:usecase_assurly/models/register_user_model.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -19,93 +21,230 @@ class RegisterFormState extends State<RegisterForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Assurly registration'),
-        ),
-        body: Center(
-          child: Form(
-              key: _formKey,
-              child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Card(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 400),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          TextFormField(
-                            controller: firstNameController,
-                            decoration: const InputDecoration(
-                              label: Text('Firstname'),
-                            ),
-                            onChanged: (value) {
-                              setState(() => firstName = value);
-                            },
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter your firstname';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) =>
-                                setState(() => firstName = value!),
-                          ),
-                          TextFormField(
-                            controller: lastNameController,
-                            decoration: const InputDecoration(
-                              label: Text("Lastname"),
-                            ),
-                            onChanged: (value) {
-                              setState(() => lastName = value);
-                            },
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter your last name';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) =>
-                                setState(() => lastName = value!),
-                          ),
-                          _FormDatePicker(
-                            birthDate: birthDate,
-                            onChanged: (value) {
-                              setState(() => birthDate = value);
-                            },
-                            onSaved: (value) =>
-                                setState(() => birthDate = value!),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              final form = _formKey.currentState;
-                              if (_formKey.currentState!.validate()) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('Processing Data')),
-                                );
-                                form?.save();
-                              }
-                            },
-                            child: const Text('Submit'),
-                          ),
-                        ],
+      backgroundColor: Color.fromARGB(255, 236, 188, 30),
+      body: Form(
+        key: _formKey,
+        child: SizedBox(
+          width: double.infinity,
+          height: double.infinity,
+          child: Align(
+            alignment: Alignment.center,
+            child: Container(
+              width: 400,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Center(
+                      child: Text(
+                        "Create account",
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 122, 122, 122),
+                        ),
                       ),
                     ),
-                  ))),
-        ));
+                    const SizedBox(height: 20),
+                    TextFormField(
+                        keyboardType: TextInputType.emailAddress,
+                        controller: firstNameController,
+                        decoration: InputDecoration(
+                          hintText: "Firstname",
+                          isDense: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          setState(() => firstName = value);
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter your firstname';
+                          }
+                          return null;
+                        }),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                        keyboardType: TextInputType.emailAddress,
+                        controller: lastNameController,
+                        decoration: InputDecoration(
+                          hintText: "Lastname",
+                          isDense: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          setState(() => lastName = value);
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter your lastname';
+                          }
+                          return null;
+                        }),
+                    const SizedBox(height: 20),
+                    _FormDatePicker(
+                        birthDate: birthDate,
+                        onChanged: (value) {
+                          setState(() => birthDate = value);
+                        }),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: Text(
+                                          'User ${firstNameController.text} ${lastNameController.text} created successfully !'),
+                                    );
+                                  },
+                                );
+                                setState(() {
+                                  final user = RegisterUserModel(
+                                      firstNameController,
+                                      lastNameController,
+                                      birtDateController,
+                                      firstname: firstName,
+                                      lastname: lastName,
+                                      birthdate: birthDate.toString());
+
+                                  ApiService().createUser(user);
+                                });
+                              }
+                              firstNameController.clear();
+                              lastNameController.clear();
+                              birtDateController.clear();
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Color.fromARGB(255, 236, 188, 30),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 40, vertical: 15)),
+                            child: const Text(
+                              "Sign up",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    // return Scaffold(
+    //     backgroundColor: Colors.grey[200],
+    //     body: Center(
+    //       child: Form(
+    //           key: _formKey,
+    //           child: Align(
+    //             alignment: Alignment.topCenter,
+    //             child: ConstrainedBox(
+    //               constraints: const BoxConstraints(maxWidth: 400),
+    //               child: Column(
+    //                 mainAxisAlignment: MainAxisAlignment.center,
+    //                 crossAxisAlignment: CrossAxisAlignment.center,
+    //                 children: [
+    //                   TextFormField(
+    //                       controller: firstNameController,
+    //                       decoration: const InputDecoration(
+    //                         label: Text('Firstname'),
+    //                       ),
+    //                       onChanged: (value) {
+    //                         setState(() => firstName = value);
+    //                       },
+    //                       validator: (value) {
+    //                         if (value!.isEmpty) {
+    //                           return 'Please enter your firstname';
+    //                         }
+    //                         return null;
+    //                       }),
+    //                   TextFormField(
+    //                       controller: lastNameController,
+    //                       decoration: const InputDecoration(
+    //                         label: Text("Lastname"),
+    //                       ),
+    //                       onChanged: (value) {
+    //                         setState(() => lastName = value);
+    //                       },
+    //                       validator: (value) {
+    //                         if (value!.isEmpty) {
+    //                           return 'Please enter your last name';
+    //                         }
+    //                         return null;
+    //                       }),
+    //                   _FormDatePicker(
+    //                       birthDate: birthDate,
+    //                       onChanged: (value) {
+    //                         setState(() => birthDate = value);
+    //                       }),
+    //                   ElevatedButton(
+    //                     onPressed: () {
+    //                       if (_formKey.currentState!.validate()) {
+    //                         showDialog(
+    //                           context: context,
+    //                           builder: (context) {
+    //                             return AlertDialog(
+    //                               content: Text(
+    //                                   'User ${firstNameController.text} ${lastNameController.text} created successfully !'),
+    //                             );
+    //                           },
+    //                         );
+    //                         setState(() {
+    //                           final user = RegisterUserModel(
+    //                               firstNameController,
+    //                               lastNameController,
+    //                               birtDateController,
+    //                               firstname: firstName,
+    //                               lastname: lastName,
+    //                               birthdate: birthDate.toString());
+
+    //                           ApiService().createUser(user);
+    //                         });
+    //                       }
+    //                       firstNameController.clear();
+    //                       lastNameController.clear();
+    //                       birtDateController.clear();
+    //                     },
+    //                     child: const Text('Submit'),
+    //                   ),
+    //                 ],
+    //               ),
+    //             ),
+    //           )),
+    //     ));
   }
 }
 
 class _FormDatePicker extends StatefulWidget {
   final DateTime birthDate;
   final ValueChanged<DateTime> onChanged;
-  final onSaved;
 
   const _FormDatePicker({
     required this.birthDate,
     required this.onChanged,
-    this.onSaved,
   });
 
   @override
@@ -124,7 +263,7 @@ class _FormDatePickerState extends State<_FormDatePicker> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(
-              'Date',
+              'Birthdate',
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             Text(
@@ -152,47 +291,3 @@ class _FormDatePickerState extends State<_FormDatePicker> {
     );
   }
 }
-
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//         appBar: AppBar(
-//             title:Text("DatePicker on TextField"), 
-//             backgroundColor: Colors.redAccent, //background color of app bar
-//         ),
-//         body:Container(
-//           padding: EdgeInsets.all(15),
-//           height:150,
-//           child:Center( 
-//              child:TextField(
-//                 controller: dateinput, //editing controller of this TextField
-//                 decoration: InputDecoration( 
-//                    icon: Icon(Icons.calendar_today), //icon of text field
-//                    labelText: "Enter Date" //label text of field
-//                 ),
-//                 readOnly: true,  //set it true, so that user will not able to edit text
-//                 onTap: () async {
-//                   DateTime pickedDate = await showDatePicker(
-//                       context: context, initialDate: DateTime.now(),
-//                       firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
-//                       lastDate: DateTime(2101)
-//                   );
-                  
-//                   if(pickedDate != null ){
-//                       print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
-//                       String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate); 
-//                       print(formattedDate); //formatted date output using intl package =>  2021-03-16
-//                         //you can implement different kind of Date Format here according to your requirement
-
-//                       setState(() {
-//                          dateinput.text = formattedDate; //set output date to TextField value. 
-//                       });
-//                   }else{
-//                       print("Date is not selected");
-//                   }
-//                 },
-//              )
-//           )
-//         )
-//     );
-//   }
-// }

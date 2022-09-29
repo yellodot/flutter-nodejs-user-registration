@@ -1,15 +1,16 @@
 import 'dart:convert';
+import 'package:flutter/src/widgets/editable_text.dart';
 
-List<RegisterUserModel> RegisterUserModelFromJson(String str) => List<RegisterUserModel>.from(json.decode(str).map((x) => RegisterUserModel.fromJson(x)));
+RegisterUserModel RegisterUserModelFromJson(String str) => RegisterUserModel.fromJson(json.decode(str));
 
-String RegisterUserModelToJson(List<RegisterUserModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String RegisterUserModelToJson(RegisterUserModel data) => json.encode(data.toJson());
 
 class RegisterUserModel {
   String? firstname;
   String? lastname;
   String? birthdate;
 
-  RegisterUserModel({this.firstname, this.lastname, this.birthdate});
+  RegisterUserModel(TextEditingController firstNameController, TextEditingController lastNameController, TextEditingController birtDateController, {this.firstname, this.lastname, this.birthdate});
 
   RegisterUserModel.fromJson(Map<String, dynamic> json) {
     firstname = json['firstname'];
