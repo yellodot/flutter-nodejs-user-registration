@@ -20,7 +20,7 @@ class RegisterFormState extends State<RegisterForm> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Assurly usecase'),
+          title: const Text('Assurly registration'),
         ),
         body: Center(
           child: Form(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'src/form_widget.dart';
+import 'package:usecase_assurly/src/back_office_page.dart';
+import 'src/signup_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,12 +11,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Assurly usecase',
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const RegisterForm(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const RegisterForm(),
+        '/admin': (context) => const Home(),
+      },
+      debugShowCheckedModeBanner: false,
     );
   }
 }
-
