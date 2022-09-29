@@ -6,7 +6,7 @@ import 'package:usecase_assurly/models/register_user_model.dart';
 import 'package:usecase_assurly/models/user_model.dart';
 
 class ApiService {
-  // fetch users from API
+  // fetch users from server
   Future<List<UserModel>?> getUsers() async {
     try {
       var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.usersEndpoint);
@@ -21,14 +21,14 @@ class ApiService {
     return null;
   }
 
-  // send new user data to API
+  // send new user data to server
   Future<RegisterUserModel> createUser(RegisterUserModel user) async {
     var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.usersEndpoint);
     var response = await http.post(url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: RegisterUserModelToJson(user));
+        body: registerUserModelToJson(user));
     if (response.statusCode == 201) {
       return RegisterUserModel.fromJson(jsonDecode(response.body));
     } else {

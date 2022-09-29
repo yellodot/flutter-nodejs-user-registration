@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const RegisterForm(),
-        '/admin': (context) => const Home(),
+        '/admin': (context) => const UsersTable(),
       },
       debugShowCheckedModeBanner: false,
     );

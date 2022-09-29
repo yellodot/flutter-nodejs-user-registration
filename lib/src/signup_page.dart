@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:intl/intl.dart';
 import 'package:usecase_assurly/api_service.dart';
 import 'package:usecase_assurly/models/register_user_model.dart';
 
@@ -91,10 +92,30 @@ class RegisterFormState extends State<RegisterForm> {
                           return null;
                         }),
                     const SizedBox(height: 20),
-                    _FormDatePicker(
-                        birthDate: birthDate,
-                        onChanged: (value) {
-                          setState(() => birthDate = value);
+                    TextField(
+                        controller: birtDateController,
+                        decoration: const InputDecoration(
+                            icon: Icon(Icons.calendar_today),
+                            labelText: "Birthdate"),
+                        onTap: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(1900),
+                              lastDate: DateTime(2101));
+                          if (pickedDate != null) {
+                            print(
+                                pickedDate); //get the picked date in the format => 2022-07-04 00:00:00.000
+                            String formattedDate = DateFormat('dd-MM-yyyy').format(
+                                pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+                            print(
+                                formattedDate); //formatted date output using intl package =>  2022-07-04
+                            setState(() {
+                              birtDateController.text = formattedDate;
+                            });
+                          } else {
+                            print("Date is not selected");
+                          }
                         }),
                     const SizedBox(height: 20),
                     Row(
@@ -109,7 +130,7 @@ class RegisterFormState extends State<RegisterForm> {
                                   builder: (context) {
                                     return AlertDialog(
                                       content: Text(
-                                          'User ${firstNameController.text} ${lastNameController.text} created successfully !'),
+                                          'User $firstName $lastName created successfully !'),
                                     );
                                   },
                                 );
@@ -130,7 +151,8 @@ class RegisterFormState extends State<RegisterForm> {
                               birtDateController.clear();
                             },
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: Color.fromARGB(255, 236, 188, 30),
+                                backgroundColor:
+                                    Color.fromARGB(255, 236, 188, 30),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
                                 padding: const EdgeInsets.symmetric(
@@ -153,141 +175,6 @@ class RegisterFormState extends State<RegisterForm> {
           ),
         ),
       ),
-    );
-    // return Scaffold(
-    //     backgroundColor: Colors.grey[200],
-    //     body: Center(
-    //       child: Form(
-    //           key: _formKey,
-    //           child: Align(
-    //             alignment: Alignment.topCenter,
-    //             child: ConstrainedBox(
-    //               constraints: const BoxConstraints(maxWidth: 400),
-    //               child: Column(
-    //                 mainAxisAlignment: MainAxisAlignment.center,
-    //                 crossAxisAlignment: CrossAxisAlignment.center,
-    //                 children: [
-    //                   TextFormField(
-    //                       controller: firstNameController,
-    //                       decoration: const InputDecoration(
-    //                         label: Text('Firstname'),
-    //                       ),
-    //                       onChanged: (value) {
-    //                         setState(() => firstName = value);
-    //                       },
-    //                       validator: (value) {
-    //                         if (value!.isEmpty) {
-    //                           return 'Please enter your firstname';
-    //                         }
-    //                         return null;
-    //                       }),
-    //                   TextFormField(
-    //                       controller: lastNameController,
-    //                       decoration: const InputDecoration(
-    //                         label: Text("Lastname"),
-    //                       ),
-    //                       onChanged: (value) {
-    //                         setState(() => lastName = value);
-    //                       },
-    //                       validator: (value) {
-    //                         if (value!.isEmpty) {
-    //                           return 'Please enter your last name';
-    //                         }
-    //                         return null;
-    //                       }),
-    //                   _FormDatePicker(
-    //                       birthDate: birthDate,
-    //                       onChanged: (value) {
-    //                         setState(() => birthDate = value);
-    //                       }),
-    //                   ElevatedButton(
-    //                     onPressed: () {
-    //                       if (_formKey.currentState!.validate()) {
-    //                         showDialog(
-    //                           context: context,
-    //                           builder: (context) {
-    //                             return AlertDialog(
-    //                               content: Text(
-    //                                   'User ${firstNameController.text} ${lastNameController.text} created successfully !'),
-    //                             );
-    //                           },
-    //                         );
-    //                         setState(() {
-    //                           final user = RegisterUserModel(
-    //                               firstNameController,
-    //                               lastNameController,
-    //                               birtDateController,
-    //                               firstname: firstName,
-    //                               lastname: lastName,
-    //                               birthdate: birthDate.toString());
-
-    //                           ApiService().createUser(user);
-    //                         });
-    //                       }
-    //                       firstNameController.clear();
-    //                       lastNameController.clear();
-    //                       birtDateController.clear();
-    //                     },
-    //                     child: const Text('Submit'),
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //           )),
-    //     ));
-  }
-}
-
-class _FormDatePicker extends StatefulWidget {
-  final DateTime birthDate;
-  final ValueChanged<DateTime> onChanged;
-
-  const _FormDatePicker({
-    required this.birthDate,
-    required this.onChanged,
-  });
-
-  @override
-  State<_FormDatePicker> createState() => _FormDatePickerState();
-}
-
-class _FormDatePickerState extends State<_FormDatePicker> {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text(
-              'Birthdate',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            Text(
-              intl.DateFormat.yMd().format(widget.birthDate),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ],
-        ),
-        TextButton(
-          child: const Text('Edit'),
-          onPressed: () async {
-            var newDate = await showDatePicker(
-              context: context,
-              initialDate: widget.birthDate,
-              firstDate: DateTime(1900),
-              lastDate: DateTime(2100),
-            );
-            if (newDate == null) {
-              return;
-            }
-            widget.onChanged(newDate);
-          },
-        )
-      ],
     );
   }
 }

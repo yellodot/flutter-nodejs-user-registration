@@ -1,9 +1,10 @@
 import 'dart:convert';
+// ignore: implementation_imports
 import 'package:flutter/src/widgets/editable_text.dart';
 
-RegisterUserModel RegisterUserModelFromJson(String str) => RegisterUserModel.fromJson(json.decode(str));
+RegisterUserModel registerUserModelFromJson(String str) => RegisterUserModel.fromJson(json.decode(str));
 
-String RegisterUserModelToJson(RegisterUserModel data) => json.encode(data.toJson());
+String registerUserModelToJson(RegisterUserModel data) => json.encode(data.toJson());
 
 class RegisterUserModel {
   String? firstname;
@@ -20,9 +21,9 @@ class RegisterUserModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['firstname'] = this.firstname;
-    data['lastname'] = this.lastname;
-    data['birthdate'] = this.birthdate;
+    data['firstname'] = firstname;
+    data['lastname'] = lastname;
+    data['birthdate'] = birthdate;
     return data;
   }
 }
