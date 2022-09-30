@@ -6,10 +6,10 @@ class UsersTable extends StatefulWidget {
   const UsersTable({Key? key}) : super(key: key);
 
   @override
-  _UsersTableState createState() => _UsersTableState();
+  UsersTableState createState() => UsersTableState();
 }
 
-class _UsersTableState extends State<UsersTable> {
+class UsersTableState extends State<UsersTable> {
   late List<UserModel>? _userModel = [];
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _UsersTableState extends State<UsersTable> {
         ),
         body: _userModel == null || _userModel!.isEmpty
             ? const Center(
-                child: CircularProgressIndicator(),
+                child: Text("No users found"),
               )
             : Center(
                 child: SingleChildScrollView(
@@ -76,7 +76,7 @@ class _UsersTableState extends State<UsersTable> {
                             DataCell(Text(_userModel![index].firstname)),
                             DataCell(Text(_userModel![index].lastname)),
                             DataCell(
-                                Text(_userModel![index].birthdate.toString())),
+                                Text(_userModel![index].birthdate.toString().substring(0, 10))),
                             DataCell(
                                 Text(_userModel![index].createdAt.toString())),
                           ],

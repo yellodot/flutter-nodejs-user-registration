@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart' as intl;
 import 'package:intl/intl.dart';
 import 'package:usecase_assurly/api_service.dart';
 import 'package:usecase_assurly/models/register_user_model.dart';
@@ -22,7 +21,7 @@ class RegisterFormState extends State<RegisterForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 236, 188, 30),
+      backgroundColor: const Color.fromARGB(255, 236, 188, 30),
       body: Form(
         key: _formKey,
         child: SizedBox(
@@ -104,17 +103,11 @@ class RegisterFormState extends State<RegisterForm> {
                               firstDate: DateTime(1900),
                               lastDate: DateTime(2101));
                           if (pickedDate != null) {
-                            print(
-                                pickedDate); //get the picked date in the format => 2022-07-04 00:00:00.000
-                            String formattedDate = DateFormat('dd-MM-yyyy').format(
-                                pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
-                            print(
-                                formattedDate); //formatted date output using intl package =>  2022-07-04
+                            String formattedDate =
+                                DateFormat('dd-MM-yyyy').format(pickedDate); // format the picked date in the desired output format
                             setState(() {
                               birtDateController.text = formattedDate;
                             });
-                          } else {
-                            print("Date is not selected");
                           }
                         }),
                     const SizedBox(height: 20),
@@ -152,7 +145,7 @@ class RegisterFormState extends State<RegisterForm> {
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor:
-                                    Color.fromARGB(255, 236, 188, 30),
+                                    const Color.fromARGB(255, 236, 188, 30),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
                                 padding: const EdgeInsets.symmetric(

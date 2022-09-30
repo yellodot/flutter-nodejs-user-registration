@@ -1,5 +1,5 @@
+// ignore_for_file: implementation_imports
 import 'dart:convert';
-// ignore: implementation_imports
 import 'package:flutter/src/widgets/editable_text.dart';
 
 RegisterUserModel registerUserModelFromJson(String str) => RegisterUserModel.fromJson(json.decode(str));
@@ -20,7 +20,7 @@ class RegisterUserModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['firstname'] = firstname;
     data['lastname'] = lastname;
     data['birthdate'] = birthdate;

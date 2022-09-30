@@ -14,10 +14,11 @@ app.use(
 
 app.use("/api", router);
 
-// create table
+// create table users
 sql = `CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, firstname TEXT, lastname TEXT, birthdate DATETIME, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)`;
 db.run(sql);
 
+// drop table users to reinitialize database
 // sql = `DROP TABLE IF EXISTS users`;
 // db.run(sql);
 
